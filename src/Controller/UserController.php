@@ -13,6 +13,8 @@ use App\User\Application\DeleteUserUseCase;
 use App\User\Application\UpdateUserUseCase;
 use App\User\Domain\User;
 use App\User\Domain\UserFactory;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -35,17 +37,17 @@ class UserController extends AbstractController
 	private UpdateUserUseCase $updateUserUseCase;
 
 	public function __construct(
-		LoadUserPort $loadUserPort,
+		LoadUserPort         $loadUserPort,
 		CreateUserFormMapper $createUserFormMapper,
-		CreateUserUseCase $createUserUseCase,
-		DeleteUserUseCase $deleteUserUseCase,
-		UpdateUserUseCase $updateUserUseCase
+		CreateUserUseCase    $createUserUseCase,
+		DeleteUserUseCase    $deleteUserUseCase,
+		UpdateUserUseCase    $updateUserUseCase
 	) {
-	    $this->loadUserPort = $loadUserPort;
-	    $this->createUserFormMapper = $createUserFormMapper;
-	    $this->createUserUseCase = $createUserUseCase;
-	    $this->deleteUserUseCase = $deleteUserUseCase;
-	    $this->updateUserUseCase = $updateUserUseCase;
+		$this->loadUserPort         = $loadUserPort;
+		$this->createUserFormMapper = $createUserFormMapper;
+		$this->createUserUseCase    = $createUserUseCase;
+		$this->deleteUserUseCase    = $deleteUserUseCase;
+		$this->updateUserUseCase    = $updateUserUseCase;
 	}
 
 	/**
@@ -56,7 +58,7 @@ class UserController extends AbstractController
 	{
 		$users = $this->loadUserPort->getAllUsers();
 
-		return $this->render('users/index.html.twig', array('users'=> $users));
+		return $this->render('users/index.html.twig', array('users' => $users));
 	}
 
 	/**
@@ -65,12 +67,11 @@ class UserController extends AbstractController
 	 */
 	public function createUser(Request $request)
 	{
-//		$users = $this->loadUserPort->getAllUsers();
 		$createForm = new CreateUserForm();
 
 		$form = $this->createFormBuilder($createForm)
 			->add('Name', TextType::class, array('attr' => array('class' => 'form-control')))
-			->add('Email', TextType::class, array('attr' => array('class' => 'form-control')))
+			->add('Email', EmailType::class, array('attr' => array('class' => 'form-control')))
 			->add('Phone', TextType::class, array('attr' => array('class' => 'form-control')))
 			->add('Passport', TextType::class, array('attr' => array('class' => 'form-control')))
 			->add('save', SubmitType::class, array(
@@ -81,7 +82,7 @@ class UserController extends AbstractController
 
 		$form->handleRequest($request);
 
-		if($form->isSubmitted() && $form->isValid()) {
+		if ($form->isSubmitted() && $form->isValid()) {
 			$userData = $form->getData();
 
 			$this->createUserUseCase->createByCommand($this->createUserFormMapper->mapToCreateUserCommand($userData));
@@ -116,22 +117,23 @@ class UserController extends AbstractController
 	{
 		$user = $this->loadUserPort->getById($userId);
 
-		$createForm = $this->getValidForm($user);
+		$createForm = $this->getValidFormForUpdate($user);
 
 		$form = $this->createFormBuilder($createForm)
 			->add('Name', TextType::class, array('attr' => array('class' => 'form-control')))
-			->add('Email', TextType::class, array('attr' => array('class' => 'form-control')))
+			->add('Email', EmailType::class, array('attr' => array('class' => 'form-control')))
 			->add('Phone', TextType::class, array('attr' => array('class' => 'form-control')))
 			->add('Passport', TextType::class, array('attr' => array('class' => 'form-control')))
 			->add('Save', SubmitType::class, array(
-				'label' => 'Create',
-				'attr' => array('class' => 'btn btn-primary mt-3')
-			))
+					'label' => 'Update',
+					'attr' => array('class' => 'btn btn-primary mt-3')
+				)
+			)
 			->getForm();
 
 		$form->handleRequest($request);
 
-		if($form->isSubmitted() && $form->isValid()) {
+		if ($form->isSubmitted() && $form->isValid()) {
 			$userData = $form->getData();
 
 			$this->updateUserUseCase->update(
@@ -145,18 +147,18 @@ class UserController extends AbstractController
 
 		$form->handleRequest($request);
 
-		return $this->render('users/new.html.twig', array(
+		return $this->render('users/update.html.twig', array(
 			'form' => $form->createView()
 		));
 	}
 
-	private function getValidForm(User $user): CreateUserForm
+	private function getValidFormForUpdate(User $user): CreateUserForm
 	{
-		$form = new CreateUserForm();
-		$form->Name = $user->getName();
-		$form->Email = $user->getEmail();
+		$form           = new CreateUserForm();
+		$form->Name     = $user->getName();
+		$form->Email    = $user->getEmail();
 		$form->Passport = $user->getUserInfo()->getPassport();
-		$form->Phone = $user->getUserInfo()->getPhone();
+		$form->Phone    = $user->getUserInfo()->getPhone();
 
 		return $form;
 	}

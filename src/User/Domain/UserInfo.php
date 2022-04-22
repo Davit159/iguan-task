@@ -29,7 +29,7 @@ class UserInfo
 	private string $passport;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="App\User\Domain\User")
+	 * @ORM\OneToOne(targetEntity="App\User\Domain\User",  inversedBy="userInfo")
 	 * @ORM\JoinColumn(name="user_id",
 	 *     referencedColumnName="id")
 	 */

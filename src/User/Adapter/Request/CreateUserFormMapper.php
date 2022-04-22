@@ -10,11 +10,11 @@ class CreateUserFormMapper
 {
 	public function mapToCreateUserCommand(CreateUserForm $formData): CreateUserCommand
 	{
-		return new CreateUserCommand($formData->Email, $formData->Name, $formData->Phone, $formData->Passport);
+		return new CreateUserCommand($formData->Name, $formData->Email, $formData->Phone, $formData->Passport);
 	}
 
 	public function mapToUpdateUserCommand(CreateUserForm $formData, User $user)
 	{
-		return new UpdateUserCommand($user, $formData->Email, $formData->Name, $formData->Phone, $formData->Passport);
+		return new UpdateUserCommand($user, $formData->Name,$formData->Email, $formData->Phone, $formData->Passport);
 	}
 }
