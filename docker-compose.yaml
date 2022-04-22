@@ -1,0 +1,48 @@
+version: "3.2"
+services:
+  php-app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: local-dev
+    image: api/php
+    container_name: php-app-container
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    networks:
+      - app-network
+
+  webserver:
+    image: nginx:alpine
+    container_name: webserver-container
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-app
+      - database
+    networks:
+      - app-network
+
+  database:
+    image: mysql:5.7.22
+    container_name: db-container
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: taskdb
+      MYSQL_ROOT_PASSWORD: toxindzners
+    volumes:
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

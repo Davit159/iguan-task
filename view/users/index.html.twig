@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block body %}
+    {% if users %}
+        <table id="users" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Passport</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.getName() }}</td>
+                    <td>{{ user.getEmail() }}</td>
+                    {% if user.getUserInfo() != null %}
+                        <td>{{ user.getUserInfo().getPhone()}}</td>
+                        <td>{{ user.getUserInfo().getPassport()}}</td>
+                    {% else %}
+                        <td>{{ 'chka' }}</td>
+                        <td>{{ 'chka' }}</td>
+                    {% endif %}
+                    <td>
+                        <a href="/user/edit/{{ user.getId() }}" class="btn btn-light">Edit</a>
+                        <a href="#" class="btn btn-danger delete-user" data-id="{{ user.getId() }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No user to display</p>
+    {% endif %}
+
+    <script src="./js/main.js"></script>
+{% endblock %}
+
