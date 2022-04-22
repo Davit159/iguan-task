@@ -8,7 +8,7 @@ if (users) {
         const id = e.target.getAttribute('data-id');
 
         alert(id);
-        fetch(`/users/${id}`, {
+        fetch(`/user/${id}`, {
           method: 'DELETE'
         }).then(res => window.location.reload());
 

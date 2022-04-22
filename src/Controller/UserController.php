@@ -97,7 +97,7 @@ class UserController extends AbstractController
 	}
 
 	/**
-	 * @Route ("/users/{userId}", methods={"DELETE"})
+	 * @Route ("/user/{userId}", methods={"DELETE"})
 	 *
 	 */
 	public function deleteOne(string $userId)
@@ -109,7 +109,7 @@ class UserController extends AbstractController
 	}
 
 	/**
-	 * @Route ("/users/{userId}", methods={"GET", "POST"})
+	 * @Route ("/user/{userId}", methods={"GET", "POST"})
 	 *
 	 */
 	public function updateUser(Request $request, string $userId)

@@ -22,11 +22,11 @@
                         <td>{{ user.getUserInfo().getPhone()}}</td>
                         <td>{{ user.getUserInfo().getPassport()}}</td>
                     {% else %}
-                        <td>{{ 'chka' }}</td>
-                        <td>{{ 'chka' }}</td>
+                        <td>{{ 'Not specified' }}</td>
+                        <td>{{ 'Not specified' }}</td>
                     {% endif %}
                     <td>
-                        <a href="/user/edit/{{ user.getId() }}" class="btn btn-light">Edit</a>
+                        <a href="/user/{{ user.getId() }}" class="btn btn-light">Edit</a>
                         <a href="#" class="btn btn-danger delete-user" data-id="{{ user.getId() }}">Delete</a>
                     </td>
                 </tr>
