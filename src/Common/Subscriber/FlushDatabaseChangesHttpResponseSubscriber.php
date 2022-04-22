@@ -37,18 +37,5 @@ class FlushDatabaseChangesHttpResponseSubscriber implements EventSubscriberInter
 	public function processDatabaseFlush(ResponseEvent $event): void
 	{
 		$this->entityManager->flush();
-//		if (
-//			in_array(
-//				$event->getResponse()->getStatusCode(),
-//				[
-//					Response::HTTP_OK,
-//					Response::HTTP_CREATED,
-//					Response::HTTP_NO_CONTENT,
-//					Response::HTTP_ACCEPTED
-//				]
-//			)
-//		) {
-//
-//		}
 	}
 }
